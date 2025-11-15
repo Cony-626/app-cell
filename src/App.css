@@ -244,20 +244,33 @@
 
 .calculator-container h1 {
   text-align: center;
-  color: white;
+  color: #000;
   margin: 0 0 30px 0;
   font-size: 28px;
 }
 
+.calculator-title-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.calculator-title-btn:hover {
+  opacity: 0.8;
+}
+
 .section-title {
-  color: white;
+  color: #667eea;
   font-weight: 600;
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin: 25px 0 15px 0;
   padding-bottom: 10px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 2px solid #667eea;
 }
 
 .form-group {
@@ -281,6 +294,7 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid #667eea;
 }
 
 .currency {
@@ -301,10 +315,11 @@
   width: 100%;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: #000;
 }
 
 .form-group input::placeholder {
-  color: #bbb;
+  color: #999;
 }
 
 .form-group input:not(.input-group input) {
@@ -312,8 +327,9 @@
   border-radius: 8px;
   padding: 12px 16px;
   font-size: 16px;
-  border: none;
+  border: 2px solid #667eea;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: #000;
 }
 
 .calculate-btn {
@@ -1262,9 +1278,23 @@
   border: 2px solid #dee2e6;
 }
 
+.analytics-title-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 100%;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.analytics-title-btn:hover {
+  opacity: 0.8;
+}
+
 .analytics-section h3 {
   color: #333;
-  margin: 0 0 15px 0;
+  margin: 0;
   font-size: 20px;
   text-align: center;
 }

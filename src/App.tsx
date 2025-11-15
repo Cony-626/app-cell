@@ -57,6 +57,8 @@ function App() {
   const [unitsSold, setUnitsSold] = useState<{ [key: string]: string }>({})
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
   const [selectedDay, setSelectedDay] = useState<string>('monday')
+  const [calculatorExpanded, setCalculatorExpanded] = useState(true)
+  const [analyticsExpanded, setAnalyticsExpanded] = useState(true)
 
   // Cargar sesión del localStorage al iniciar
   useEffect(() => {
@@ -248,6 +250,15 @@ function App() {
     setAuthUsername('')
     setAuthPassword('')
     setAuthError('')
+  }
+
+  // Función helper para validar que no haya números negativos
+  const validateNonNegative = (value: string): string => {
+    const num = parseFloat(value)
+    if (num < 0 || (value && isNaN(num))) {
+      return '0'
+    }
+    return value
   }
 
   const calculateUnitPrice = () => {
@@ -613,117 +624,125 @@ function App() {
       </div>
       
       <div className="calculator-container">
-        <h1>💰 Calculadora de Ganancias</h1>
-        
-        <div className="form-group">
-          <label htmlFor="productName">Nombre del Producto:</label>
-          <input
-            id="productName"
-            type="text"
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
-            placeholder="Ej: Manzanas"
-          />
-        </div>
-
-        <div className="section-title">Precio de Compra</div>
-
-        <div className="form-group">
-          <label htmlFor="totalPrice">Precio Total de Compra:</label>
-          <div className="input-group">
-            <span className="currency">$</span>
-            <input
-              id="totalPrice"
-              type="number"
-              value={totalPrice}
-              onChange={(e) => setTotalPrice(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Ej: 150.00"
-              step="0.01"
-              min="0"
-            />
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="quantity">Cantidad de Unidades:</label>
-          <input
-            id="quantity"
-            type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Ej: 6"
-            step="1"
-            min="1"
-          />
-        </div>
-
-        <button onClick={calculateUnitPrice} className="calculate-btn">
-          Calcular Precio Unitario
+        <button 
+          className="calculator-title-btn"
+          onClick={() => setCalculatorExpanded(!calculatorExpanded)}
+          title="Click para expandir/colapsar"
+        >
+          <h1>📦 Calculadora de Productos {calculatorExpanded ? '▼' : '▶'}</h1>
         </button>
+        
+        {calculatorExpanded && (
+          <div className="calculator-content">
+            <label htmlFor="productName">Nombre del Producto:</label>
+            <input
+              id="productName"
+              type="text"
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+              placeholder="Ej: Collares"
+            />
 
-        {unitPrice !== null && (
-          <div className="result unit-price-result">
-            <p className="result-label">Precio Unitario de Compra:</p>
-            <p className="result-value">${unitPrice.toFixed(2)}</p>
-          </div>
-        )}
+            <div className="section-title">Precio de Compra</div>
 
-        {unitPrice !== null && (
-          <>
             <div className="form-group">
-              <label htmlFor="unitSalePrice">Precio Unitario de Venta:</label>
+              <label htmlFor="totalPrice">Precio Total de Compra:</label>
               <div className="input-group">
                 <span className="currency">$</span>
                 <input
-                  id="unitSalePrice"
+                  id="totalPrice"
                   type="number"
-                  value={unitSalePrice}
-                  onChange={(e) => setUnitSalePrice(e.target.value)}
-                  placeholder="Ej: 30.00"
+                  value={totalPrice}
+                  onChange={(e) => setTotalPrice(validateNonNegative(e.target.value))}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Ej: 150.00"
                   step="0.01"
                   min="0"
                 />
               </div>
             </div>
 
-            <button onClick={calculateProfit} className="calculate-btn profit-btn">
-              Calcular Ganancia
+            <div className="form-group">
+              <label htmlFor="quantity">Cantidad de Unidades:</label>
+              <input
+                id="quantity"
+                type="number"
+                value={quantity}
+                onChange={(e) => setQuantity(validateNonNegative(e.target.value))}
+                onKeyPress={handleKeyPress}
+                placeholder="Ej: 6"
+                step="1"
+                min="1"
+              />
+            </div>
+
+            <button onClick={calculateUnitPrice} className="calculate-btn">
+              Calcular Precio Unitario
             </button>
 
-            {profit !== null && (
-              <div className={`result profit-result ${profit >= 0 ? 'positive' : 'negative'}`}>
-                <div className="profit-results-group">
-                  <div className="result-item">
-                    <span className="result-item-label">Precio Unitario:</span>
-                    <span className="result-item-value">${unitPrice.toFixed(2)}</span>
-                  </div>
-                  <div className="result-item profit-unit">
-                    <span className="result-item-label">Ganancia Unitaria:</span>
-                    <span className={`result-item-value ${profit >= 0 ? 'profit-positive' : 'profit-negative'}`}>
-                      ${profit.toFixed(2)}
-                    </span>
-                  </div>
-                  <div className="result-item profit-total">
-                    <span className="result-item-label">Ganancia Total:</span>
-                    <span className={`result-item-value ${profit >= 0 ? 'profit-positive' : 'profit-negative'}`}>
-                      ${totalProfit?.toFixed(2)}
-                    </span>
-                  </div>
-                  {profitPercentage !== null && (
-                    <div className="result-item">
-                      <span className="result-item-label">Porcentaje:</span>
-                      <span className="result-item-value">{profitPercentage.toFixed(2)}%</span>
-                    </div>
-                  )}
-                </div>
-                <button onClick={saveProduct} className="save-btn">
-                  💾 Guardar Producto
-                </button>
+            {unitPrice !== null && (
+              <div className="result unit-price-result">
+                <p className="result-label">Precio Unitario de Compra:</p>
+                <p className="result-value">${unitPrice.toFixed(2)}</p>
               </div>
             )}
-          </>
+
+            {unitPrice !== null && (
+              <>
+                <div className="form-group">
+                  <label htmlFor="unitSalePrice">Precio Unitario de Venta:</label>
+                  <div className="input-group">
+                    <span className="currency">$</span>
+                    <input
+                      id="unitSalePrice"
+                      type="number"
+                      value={unitSalePrice}
+                      onChange={(e) => setUnitSalePrice(validateNonNegative(e.target.value))}
+                      placeholder="Ej: 30.00"
+                      step="0.01"
+                      min="0"
+                    />
+                  </div>
+                </div>
+
+                <button onClick={calculateProfit} className="calculate-btn profit-btn">
+                  Calcular Ganancia
+                </button>
+
+                {profit !== null && (
+                  <div className={`result profit-result ${profit >= 0 ? 'positive' : 'negative'}`}>
+                    <div className="profit-results-group">
+                      <div className="result-item">
+                        <span className="result-item-label">Precio Unitario:</span>
+                        <span className="result-item-value">${unitPrice.toFixed(2)}</span>
+                      </div>
+                      <div className="result-item profit-unit">
+                        <span className="result-item-label">Ganancia Unitaria:</span>
+                        <span className={`result-item-value ${profit >= 0 ? 'profit-positive' : 'profit-negative'}`}>
+                          ${profit.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="result-item profit-total">
+                        <span className="result-item-label">Ganancia Total:</span>
+                        <span className={`result-item-value ${profit >= 0 ? 'profit-positive' : 'profit-negative'}`}>
+                          ${totalProfit?.toFixed(2)}
+                        </span>
+                      </div>
+                      {profitPercentage !== null && (
+                        <div className="result-item">
+                          <span className="result-item-label">Porcentaje:</span>
+                          <span className="result-item-value">{profitPercentage.toFixed(2)}%</span>
+                        </div>
+                      )}
+                    </div>
+                    <button onClick={saveProduct} className="save-btn">
+                      💾 Guardar Producto
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         )}
       </div>
 
@@ -783,9 +802,17 @@ function App() {
         {/* Sección de Análisis */}
         {products.length > 0 && (
           <div className="analytics-section">
-            <h3>📊 Análisis de Ventas</h3>
+            <button 
+              className="analytics-title-btn"
+              onClick={() => setAnalyticsExpanded(!analyticsExpanded)}
+              title="Click para expandir/colapsar"
+            >
+              <h3>📊 Análisis de Ventas {analyticsExpanded ? '▼' : '▶'}</h3>
+            </button>
             
-            {/* Productos más vendidos */}
+            {analyticsExpanded && (
+            <div className="analytics-content">
+              {/* Productos más vendidos */}
             {getTopSellingProducts().length > 0 && (
               <div className="analytics-card top-sellers">
                 <h4>🏆 Productos Más Vendidos</h4>
@@ -849,6 +876,8 @@ function App() {
                   ))}
                 </div>
               </div>
+            )}
+            </div>
             )}
           </div>
         )}
