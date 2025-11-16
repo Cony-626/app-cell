@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import Auth from './components/Auth'
 import { db } from './firebase'
 import { collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, updateDoc, where } from 'firebase/firestore'
 import './App.css'
