@@ -556,6 +556,16 @@ function App() {
     }
   }
 
+  // Función para abreviar nombres de productos
+  const abbreviateProductName = (name: string): string => {
+    if (!name) return ''
+    // Si el nombre es muy largo, usar solo la primera letra mayúscula
+    if (name.length > 5) {
+      return name.charAt(0).toUpperCase()
+    }
+    return name.toUpperCase()
+  }
+
   // Si no hay usuario, mostrar login/registro
   if (!user) {
     return (
@@ -910,7 +920,7 @@ function App() {
                   {!isExpanded ? (
                     <div className="product-compact">
                       <div className="compact-left">
-                        <h3>{product.name}</h3>
+                        <h3>{abbreviateProductName(product.name)}</h3>
                         <div className="compact-sold">Vendidas: <strong className="sold-count">{product.quantitySold || 0}</strong></div>
                         <div className="sales-control-compact" onClick={(e) => e.stopPropagation()}>
                           <div className="day-buttons-grid">
@@ -956,7 +966,7 @@ function App() {
                   ) : (
                     <>
                       <div className="product-info">
-                        <h3>{product.name}</h3>
+                        <h3>{abbreviateProductName(product.name)}</h3>
 
                         {/* Estado de Recuperación de Inversión */}
                         {(() => {
