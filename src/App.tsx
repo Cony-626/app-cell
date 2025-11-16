@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { db } from './firebase'
 import { collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, updateDoc, where } from 'firebase/firestore'
+import { ShareButton } from './components/ShareButton'
 import './App.css'
 
 interface Product {
@@ -620,7 +621,10 @@ function App() {
     <div className="app-container">
       <div className="logout-btn-container">
         <span className="user-display">👤 {user.username}</span>
-        <button onClick={handleLogout} className="logout-btn">Cerrar Sesión</button>
+        <div className="button-group">
+          <ShareButton appTitle="App-Cell" />
+          <button onClick={handleLogout} className="logout-btn">Cerrar Sesión</button>
+        </div>
       </div>
       
       <div className="calculator-container">
